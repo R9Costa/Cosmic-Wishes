@@ -1,173 +1,150 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MakeAWish | Envia o Teu Desejo</title>
+    <title>MakeAWish | Written in the Stars</title>
     <style>
-        :root {
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-            --accent: #fff; /* Estrelas cadentes agora são brancas e puras */
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300&display=swap');
 
-        /* 1. FUNDO CÓSMICO PROFUNDO E REALISTA */
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: 'Georgia', serif; /* Fonte mais elegante e 'mágica' */
-            color: white;
-            /* Imagem de Alta Resolução da Via Láctea Profunda */
-            background: #010103 url('https://images.unsplash.com/photo-1543722530-d2c3201371e7?q=80&w=2560&auto=format&fit=crop') no-repeat center center fixed;
-            background-size: cover;
-            overflow: hidden;
-            -webkit-font-smoothing: antialiased;
+            background: #020205 url('https://www.transparenttextures.com/patterns/stardust.png'), 
+                        radial-gradient(circle at center, #0a0a1a 0%, #020205 100%);
+            color: white; font-family: 'Inter', sans-serif; overflow: hidden;
         }
 
-        .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.2); z-index: 1; }
+        /* REALISTIC NEBULA BACKGROUND */
+        .nebula {
+            position: fixed; inset: 0;
+            background: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2000&auto=format&fit=crop') no-repeat center center;
+            background-size: cover; opacity: 0.4; mix-blend-mode: screen; pointer-events: none;
+        }
 
-        /* 2. A LUA CRESCENTE FIXA */
+        /* 3D MOON */
         .moon {
-            position: absolute; top: 10%; right: 10%; width: 100px; height: 100px;
+            position: absolute; top: 50px; right: 50px; width: 80px; height: 80px;
             background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Crescent_Moon_with_Earthshine.png/640px-Crescent_Moon_with_Earthshine.png') no-repeat center center;
-            background-size: contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.4));
-            z-index: 3; opacity: 0.9;
+            background-size: contain; filter: drop-shadow(0 0 25px rgba(255,255,255,0.3));
+            z-index: 2; animation: moonFloat 6s ease-in-out infinite;
         }
 
-        /* 3. ESTRELAS CADENTES REALISTAS */
+        @keyframes moonFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* THE STARS (WISHES) */
+        .wish-star {
+            position: absolute; color: rgba(255,255,255,0.8); font-size: 0.85rem;
+            text-shadow: 0 0 10px white; pointer-events: none; white-space: nowrap;
+            animation: wishLife 8s ease-in-out forwards;
+        }
+
+        @keyframes wishLife {
+            0% { opacity: 0; transform: scale(0.5) translateY(10px); }
+            20% { opacity: 1; transform: scale(1) translateY(0); }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: scale(0.8) translateY(-20px); }
+        }
+
+        /* SHOOTING STAR EFFECT */
         .shooting-star {
-            position: absolute; height: 1px; border-radius: 999px;
-            background: linear-gradient(-45deg, white, rgba(0,0,0,0));
-            filter: drop-shadow(0 0 4px white); opacity: 0; z-index: 2;
+            position: absolute; height: 2px; background: linear-gradient(90deg, white, transparent);
+            filter: drop-shadow(0 0 5px white); pointer-events: none; z-index: 5;
         }
 
-        @keyframes shoot {
-            0% { transform: translateX(0) translateY(0) rotate(-45deg); width: 0; opacity: 1; }
-            10% { width: 100px; }
-            100% { transform: translateX(1200px) translateY(1200px) rotate(-45deg); width: 0; opacity: 0; }
+        /* UI ELEMENTS */
+        .interface {
+            position: relative; z-index: 10; height: 100vh; display: flex;
+            flex-direction: column; justify-content: space-between; align-items: center;
+            padding: 40px 20px; box-sizing: border-box; text-align: center;
         }
 
-        /* Layout Imersivo (Sem cartões) */
-        .main-content {
-            position: relative; z-index: 10; display: flex; flex-direction: column;
-            justify-content: flex-end; align-items: center; width: 100%; height: 100%;
-            padding-bottom: 5vh; box-sizing: border-box;
-        }
+        h1 { font-family: 'Cinzel', serif; letter-spacing: 12px; font-size: 2.2rem; margin: 0; }
+        .subtitle { font-size: 0.9rem; letter-spacing: 4px; color: #aaa; text-transform: uppercase; }
 
-        header h1 { font-weight: 300; letter-spacing: 10px; text-transform: uppercase; font-size: 3em; margin: 0; text-shadow: 0 0 15px rgba(255,255,255,0.6); }
-        header p { color: #ccc; margin-top: 5px; font-weight: 300; letter-spacing: 2px; }
-
-        /* Lista de Desejos: Flutuante e Translúcida */
-        #wish-list {
-            position: absolute; top: 25%; left: 5%; width: 40%; max-height: 50vh;
-            overflow: hidden; text-align: left; display: flex; flex-direction: column-reverse; gap: 8px; z-index: 5;
-        }
-        .wish-item {
-            padding: 10px 15px; background: rgba(255,255,255,0.03); border-radius: 10px;
-            border-left: 2px solid rgba(255,255,255,0.1); font-size: 0.9em;
-            animation: fadeInWish 1s ease forwards, float 5s ease-in-out infinite; color: #ddd; opacity: 0;
-        }
-        .wish-item b { color: rgba(255,255,255,0.5); font-weight: 300; font-size: 0.8em; margin-right: 5px; }
-
-        /* Zona de Input: Glassmorphism Puro */
-        .input-zone { width: 90%; max-width: 500px; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
+        .input-box { width: 100%; max-width: 400px; margin-bottom: 20px; }
 
         textarea {
-            width: 100%; height: 80px; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px);
-            border: 1px solid var(--border); border-radius: 20px;
-            color: white; padding: 15px; resize: none; margin-bottom: 15px; font-size: 1em;
-            box-sizing: border-box; outline: none; transition: border-color 0.3s;
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px; padding: 15px; color: white; font-family: inherit;
+            resize: none; outline: none; margin-bottom: 15px; backdrop-filter: blur(10px);
         }
-        textarea:focus { border-color: rgba(255,255,255,0.3); }
 
-        .btn-pay {
-            background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            color: white; border: 1px solid var(--border); padding: 15px 40px; border-radius: 50px;
-            font-weight: bold; cursor: pointer; transition: 0.4s; text-decoration: none;
-            text-transform: uppercase; letter-spacing: 3px; font-size: 0.9em;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        .pay-btn {
+            background: white; color: black; padding: 16px 40px; border-radius: 50px;
+            text-decoration: none; font-weight: bold; font-size: 0.8rem; letter-spacing: 2px;
+            text-transform: uppercase; transition: 0.3s; display: inline-block;
         }
-        .btn-pay:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(255,255,255,0.2); }
 
-        @keyframes fadeInWish { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
+        .pay-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px white; }
+
+        .online-now { font-size: 0.7rem; color: #666; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-<div class="overlay"></div>
-<div class="moon"></div>
-<div id="star-layer"></div>
+    <div class="nebula"></div>
+    <div class="moon"></div>
+    <div id="sky"></div>
 
-<div id="wish-list"></div>
+    <div class="interface">
+        <header>
+            <h1>MAKEAWISH</h1>
+            <div class="subtitle">Written in the Stars</div>
+        </header>
 
-<div class="main-content">
-    <header>
-        <h1>MakeAWish</h1>
-        <p>Envia o teu desejo ao cosmos por 2.00€</p>
-    </header>
+        <div class="input-box">
+            <textarea id="wish-input" rows="3" placeholder="Trust your wish to the universe..."></textarea>
+            <a href="https://www.paypal.me/VIPQuickPro/2eur" class="pay-btn" onclick="makeShoot()">Send to the Heavens • 2€</a>
+        </div>
 
-    <div class="input-zone">
-        <textarea id="user-wish" placeholder="Confia o teu desejo ao universo..."></textarea>
-        <a href="https://www.paypal.me/VIPQuickPro/2eur" class="btn-pay" id="pay-button" target="_blank">Pedir Desejo</a>
-        <p style="font-size: 0.7em; color: rgba(255,255,255,0.3); margin-top: 10px; letter-spacing: 1px;">Pagamento Seguro via PayPal</p>
+        <div class="online-now">
+            <span id="count">1,842</span> SOULS CONNECTED
+        </div>
     </div>
-</div>
 
-<script>
-    const starLayer = document.getElementById('star-layer');
-    const wishList = document.getElementById('wish-list');
-    
-    // Lista de desejos simulados para preencher o céu
-    const fakeWishes = [
-        "Paz na terra.", "Cura para quem eu amo.", "Sucesso nos meus estudos.",
-        "Abundância e prosperidade.", "Amor sincero.", "Viagem de sonho realizada.",
-        "Força para recomeçar.", "Gratidão pela vida."
-    ];
+    <script>
+        const sky = document.getElementById('sky');
+        const wishes = [
+            "Eternal love.", "Health for my family.", "Success in my journey.",
+            "May we all be free.", "Peace of mind.", "Gratitude.", "Recomeçar.", "Prosperidade."
+        ];
 
-    function shootStar(isBig = false) {
-        const star = document.createElement('div');
-        star.className = 'shooting-star';
-        // Começa mais perto do topo para cruzar a Lua se calhar
-        star.style.left = (Math.random() * 50 - 10) + '%';
-        star.style.top = (Math.random() * 20) + '%';
-        
-        if(isBig) {
-            star.style.height = '3px';
-            star.style.background = 'white';
-            star.style.filter = 'drop-shadow(0 0 10px white)';
+        function createWishStar(text = null) {
+            const star = document.createElement('div');
+            star.className = 'wish-star';
+            star.style.left = Math.random() * 80 + 10 + '%';
+            star.style.top = Math.random() * 50 + 20 + '%';
+            star.innerHTML = `✦ ${text || wishes[Math.floor(Math.random() * wishes.length)]}`;
+            sky.appendChild(star);
+            setTimeout(() => star.remove(), 8000);
         }
-        
-        star.style.animation = `shoot ${isBig ? 1.5 : 3}s ease-out forwards`;
-        starLayer.appendChild(star);
-        setTimeout(() => star.remove(), 3500);
-    }
 
-    function addWish() {
-        const wish = fakeWishes[Math.floor(Math.random() * fakeWishes.length)];
-        const div = document.createElement('div');
-        div.className = 'wish-item';
-        // Adiciona um ligeiro atraso aleatório na animação de flutuação para parecer mais natural
-        div.style.animationDelay = `${Math.random() * 2}s`;
-        div.innerHTML = `<b>Há instantes • Anónimo</b>${wish}`;
-        wishList.prepend(div);
-        
-        if(wishList.children.length > 5) wishList.lastChild.remove();
-        shootStar();
-    }
+        function makeShoot() {
+            const s = document.createElement('div');
+            s.className = 'shooting-star';
+            s.style.top = Math.random() * 30 + '%';
+            s.style.left = '-100px';
+            s.style.width = '150px';
+            s.style.transform = 'rotate(25deg)';
+            
+            const anim = s.animate([
+                { left: '-100px', opacity: 1 },
+                { left: '120%', opacity: 0 }
+            ], { duration: 1000, easing: 'ease-in' });
 
-    // Gatilho do botão: Lança estrela grande ao clicar
-    document.getElementById('pay-button').addEventListener('click', () => {
-        shootStar(true);
-    });
+            sky.appendChild(s);
+            anim.onfinish = () => s.remove();
+        }
 
-    // Início rápido com desejos
-    for(let i=0; i<4; i++) {
-        setTimeout(addWish, i * 1200);
-    }
-    
-    // Novas estrelas e desejos ao longo do tempo
-    setInterval(addWish, 10000);
-</script>
+        // Live cycle
+        setInterval(createWishStar, 4000);
+        setInterval(() => {
+            const c = document.getElementById('count');
+            c.innerText = (parseInt(c.innerText.replace(',','')) + Math.floor(Math.random()*3-1)).toLocaleString();
+        }, 3000);
 
+        // Initial stars
+        for(let i=0; i<3; i++) setTimeout(createWishStar, i * 1500);
+    </script>
 </body>
 </html>
