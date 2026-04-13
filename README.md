@@ -1,2 +1,0 @@
-# Cosmic-Wishes
-Cosmic Wishes
