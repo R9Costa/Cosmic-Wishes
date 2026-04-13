@@ -9,27 +9,25 @@
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            /* FUNDO ESCURO PARA DAR CONTRASTE */
-            background-color: #05050a;
+            background-color: #05050a; /* Fundo bem escuro */
             color: white; font-family: 'Inter', sans-serif; overflow: hidden;
         }
 
-        /* NEBULOSA COM MENOS OPACIDADE PARA NÃO FICAR ESBRANQUIÇADO */
+        /* Nebulosa com opacidade reduzida para evitar o tom esbranquiçado */
         .nebula {
             position: fixed; inset: 0;
             background: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2000&auto=format&fit=crop') no-repeat center center;
             background-size: cover; 
-            opacity: 0.5; /* Reduzido de 0.8 para 0.5 para escurecer o site */
+            opacity: 0.4; /* Valor ideal para profundidade sem branquear */
             mix-blend-mode: screen; pointer-events: none;
         }
 
         .stars-overlay {
             position: fixed; inset: 0;
             background: url('https://www.transparenttextures.com/patterns/stardust.png');
-            opacity: 0.3; z-index: 1; pointer-events: none;
+            opacity: 0.2; z-index: 1; pointer-events: none;
         }
 
-        /* ESTRELAS (DESEJOS) FLUTUANTES */
         .wish-star {
             position: absolute; color: rgba(255,255,255,0.9); font-size: 0.9rem;
             text-shadow: 0 0 15px white; pointer-events: none;
@@ -42,35 +40,30 @@
             100% { opacity: 0; transform: translateY(-30px); }
         }
 
-        /* INTERFACE LIMPA */
         .interface {
             position: relative; z-index: 10; height: 100vh; display: flex;
             flex-direction: column; justify-content: space-between; align-items: center;
             padding: 40px 20px; box-sizing: border-box; text-align: center;
         }
 
-        h1 { font-family: 'Cinzel', serif; letter-spacing: 12px; font-size: 2.2rem; margin: 0; text-shadow: 0 0 20px rgba(255,255,255,0.5); }
+        h1 { font-family: 'Cinzel', serif; letter-spacing: 12px; font-size: 2.2rem; margin: 0; }
         .subtitle { font-size: 0.8rem; letter-spacing: 4px; color: rgba(255,255,255,0.5); text-transform: uppercase; }
 
         .input-box { width: 100%; max-width: 400px; margin-bottom: 20px; }
 
         textarea {
-            width: 100%; background: rgba(0, 0, 0, 0.4); /* Fundo escuro para tirar o esbranquiçado */
+            width: 100%; background: rgba(0, 0, 0, 0.5); /* Escurece a caixa de texto */
             border: 1px solid rgba(255,255,255,0.1); border-radius: 15px;
             padding: 20px; color: white; font-family: inherit; resize: none;
             outline: none; margin-bottom: 15px; backdrop-filter: blur(5px);
             box-sizing: border-box; font-size: 1rem;
         }
 
-        /* BOTÃO SÓLIDO E LIMPO */
         .pay-btn {
             background: #ffffff; color: #000; padding: 18px 45px; border-radius: 50px;
             text-decoration: none; font-weight: bold; font-size: 0.85rem; letter-spacing: 2px;
             text-transform: uppercase; transition: 0.3s; display: inline-block;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-
-        .pay-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
@@ -87,7 +80,7 @@
 
         <div class="input-box">
             <textarea id="wish-input" rows="3" placeholder="Trust your wish to the universe..."></textarea>
-            <a href="https://www.paypal.me/VIPQuickPro/2eur" class="pay-btn" id="btn">Send to the Heavens • 2€</a>
+            <a href="https://www.paypal.com/paypalme/VIPQuickPro/2" class="pay-btn">Send to the Heavens • 2€</a>
         </div>
 
         <div style="font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px;">
@@ -97,21 +90,17 @@
 
     <script>
         const sky = document.getElementById('sky');
-        const wishes = ["Love.", "Health.", "Peace.", "Freedom.", "Happiness."];
-
-        function createWish(text = null) {
+        function createWish() {
             const star = document.createElement('div');
             star.className = 'wish-star';
             star.style.left = Math.random() * 70 + 15 + '%';
             star.style.top = Math.random() * 40 + 20 + '%';
-            star.innerHTML = `✦ ${text || wishes[Math.floor(Math.random() * wishes.length)]}`;
+            star.innerHTML = `✦ Making a wish...`;
             sky.appendChild(star);
             setTimeout(() => star.remove(), 8000);
         }
-
-        // Criar desejos iniciais
-        for(let i=0; i<3; i++) setTimeout(createWish, i * 2000);
         setInterval(createWish, 5000);
+        createWish();
     </script>
 </body>
 </html>
