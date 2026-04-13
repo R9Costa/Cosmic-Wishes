@@ -3,27 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic Wishes | Faz o Teu Pedido</title>
+    <title>MakeAWish | Envia o teu desejo ao Universo</title>
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-            --accent: #5f91ff;
+            --glass: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.12);
+            --accent: #4facfe;
         }
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: 'Segoe UI', sans-serif; color: white;
-            background: #050508 url('https://images.unsplash.com/photo-1506318137071-a8e063b4bcc0?q=80&w=2560&auto=format&fit=crop') no-repeat center center fixed;
-            background-size: cover; overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white; 
+            background: #050508 url('https://images.unsplash.com/photo-1506318137071-a8e063b4bcc0?q=80&w=2560') no-repeat center center fixed;
+            background-size: cover; overflow: hidden;
         }
 
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5); z-index: 1;
-        }
+        .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 1; }
 
-        /* Animações das Estrelas */
         .shooting-star {
             position: absolute; height: 2px; border-radius: 999px;
             background: linear-gradient(-45deg, var(--accent), rgba(0,0,255,0));
@@ -33,63 +30,50 @@
         @keyframes shoot {
             0% { transform: translateX(0) translateY(0) rotate(-45deg); width: 0; opacity: 1; }
             20% { width: 150px; }
-            100% { transform: translateX(1000px) translateY(1000px) rotate(-45deg); width: 0; opacity: 0; }
+            100% { transform: translateX(1200px) translateY(1200px) rotate(-45deg); width: 0; opacity: 0; }
         }
 
-        /* Layout Principal */
-        .main-content {
-            position: relative; z-index: 10; max-width: 1200px;
-            margin: 0 auto; padding: 40px 20px; text-align: center;
-        }
+        .main-content { position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 40px 20px; text-align: center; }
 
-        header h1 { font-weight: 300; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 5px; }
-        header p { color: #ccc; margin-bottom: 40px; }
+        header h1 { font-weight: 300; letter-spacing: 8px; text-transform: uppercase; font-size: 2.5em; margin-bottom: 5px; text-shadow: 0 0 20px rgba(79, 172, 254, 0.5); }
+        header p { color: #ccc; margin-bottom: 40px; font-weight: 300; letter-spacing: 1px; }
 
-        .grid-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px; align-items: start;
-        }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
 
         .card {
-            background: var(--glass); backdrop-filter: blur(15px);
-            border: 1px solid var(--border); border-radius: 20px;
-            padding: 25px; height: 400px; display: flex; flex-direction: column;
+            background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border); border-radius: 24px; padding: 30px;
+            height: 420px; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
         }
 
-        /* Coluna 1: Desejos Recentes */
-        #wish-list { text-align: left; overflow-y: hidden; flex-grow: 1; }
-        .wish-item {
-            padding: 10px 0; border-bottom: 1px solid var(--border);
-            font-size: 0.9em; animation: fadeIn 0.5s ease;
-        }
-        .wish-item span { color: var(--accent); font-weight: bold; }
+        h3 { font-size: 0.85em; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin: 0 0 20px 0; }
 
-        /* Coluna 2: Input Principal */
+        #wish-list { text-align: left; overflow: hidden; flex-grow: 1; }
+        .wish-item { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85em; animation: fadeIn 0.8s ease; color: #eee; }
+        .wish-item b { color: var(--accent); display: block; font-size: 0.7em; margin-bottom: 2px; opacity: 0.8; }
+
         textarea {
-            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border);
-            border-radius: 12px; color: white; padding: 15px; resize: none;
-            flex-grow: 1; margin-bottom: 20px; font-size: 1em; box-sizing: border-box;
+            width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border);
+            border-radius: 15px; color: white; padding: 15px; resize: none;
+            flex-grow: 1; margin-bottom: 20px; font-size: 1em; box-sizing: border-box; outline: none;
         }
+
         .btn-pay {
-            background: linear-gradient(45deg, #4facfe, #00f2fe);
-            color: white; border: none; padding: 15px; border-radius: 50px;
-            font-weight: bold; cursor: pointer; transition: 0.3s; text-decoration: none;
-        }
-        .btn-pay:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(79, 172, 254, 0.6); }
-
-        /* Coluna 3: Feed Visual */
-        .sky-preview { 
-            background: rgba(0,0,0,0.4); border-radius: 15px; flex-grow: 1; 
-            position: relative; overflow: hidden;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white; border: none; padding: 18px; border-radius: 50px;
+            font-weight: bold; cursor: pointer; transition: 0.4s; text-decoration: none;
+            text-transform: uppercase; letter-spacing: 1px; display: block;
         }
 
-        /* Stats */
-        .stats {
-            margin-top: 30px; background: var(--glass); display: inline-block;
-            padding: 10px 30px; border-radius: 50px; border: 1px solid var(--border);
-        }
+        .btn-pay:hover { transform: scale(1.03); box-shadow: 0 0 30px rgba(79, 172, 254, 0.6); }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .sky-preview { background: rgba(0,0,0,0.5); border-radius: 15px; flex-grow: 1; position: relative; overflow: hidden; border: 1px solid var(--border); }
+
+        .stats { margin-top: 40px; background: var(--glass); display: inline-block; padding: 12px 35px; border-radius: 50px; border: 1px solid var(--border); font-size: 0.85em; }
+        .dot { height: 8px; width: 8px; background: #4facfe; border-radius: 50%; display: inline-block; margin-right: 8px; animation: pulse 2s infinite; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -99,21 +83,21 @@
 
 <div class="main-content">
     <header>
-        <h1>Cosmic Wishes</h1>
-        <p>Envia o teu desejo ao universo por apenas 1.00€</p>
+        <h1>MakeAWish</h1>
+        <p>O teu desejo escrito nas estrelas por apenas 2.00€</p>
     </header>
 
     <div class="grid-container">
         <div class="card">
             <h3>Desejos Recentes</h3>
-            <div id="wish-list">
-                </div>
+            <div id="wish-list"></div>
         </div>
 
         <div class="card">
-            <h3>Faz o Teu Pedido</h3>
-            <textarea id="user-wish" placeholder="Escreve aqui o teu desejo anónimo..."></textarea>
-            <a href="https://www.paypal.me/TEU_USER/1" class="btn-pay" id="pay-trigger" target="_blank">ENVIAR DESEJO</a>
+            <h3>Envia o Teu Desejo</h3>
+            <textarea id="user-wish" placeholder="Escreve aqui o teu desejo anónimo para o universo..."></textarea>
+            <a href="https://www.paypal.me/VIPQuickPro/2eur" class="btn-pay" id="pay-button" target="_blank">Pedir Desejo - 2€</a>
+            <p style="font-size: 0.6em; color: #777; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px;">Pagamento Seguro via PayPal</p>
         </div>
 
         <div class="card">
@@ -123,7 +107,7 @@
     </div>
 
     <div class="stats">
-        <span id="online-count">1,452</span> Pessoas Online • <span style="color: #4facfe;">● Live</span>
+        <span class="dot"></span> <span id="online-count">1,452</span> Viajantes Online
     </div>
 </div>
 
@@ -131,49 +115,45 @@
     const starLayer = document.getElementById('star-layer');
     const wishList = document.getElementById('wish-list');
     const onlineCount = document.getElementById('online-count');
-    const fakeWishes = ["Saúde para a minha família", "Conseguir o novo emprego", "Paz e amor", "Anónimo: Felicidade eterna", "Encontrar a minha alma gémea", "Sucesso no meu projeto"];
+    
+    const fakeWishes = [
+        "Encontrar o meu propósito.", "Paz para a minha família.", "Sucesso na nova jornada.",
+        "Saúde e felicidade.", "Abundância infinita.", "Amor e luz.",
+        "Superar os desafios de 2026.", "Viagem de sonho realizada.", "Gratidão pela vida."
+    ];
 
-    // 1. Função Estrela Cadente
     function shootStar(isBig = false) {
         const star = document.createElement('div');
         star.className = 'shooting-star';
-        star.style.left = Math.random() * 50 + '%';
-        star.style.top = Math.random() * 50 + '%';
-        if(isBig) {
-            star.style.height = '4px';
-            star.style.filter = 'drop-shadow(0 0 12px white)';
-            star.style.background = 'white';
-        }
+        star.style.left = (Math.random() * 70 - 10) + '%';
+        star.style.top = (Math.random() * 40) + '%';
+        if(isBig) { star.style.height = '4px'; star.style.background = 'white'; star.style.filter = 'drop-shadow(0 0 15px #4facfe)'; }
         star.style.animation = `shoot ${isBig ? 1.5 : 3}s ease-out forwards`;
         starLayer.appendChild(star);
-        setTimeout(() => star.remove(), 3000);
+        setTimeout(() => star.remove(), 3500);
     }
 
-    // 2. Prova Social: Desejos Falsos
     function addFakeWish() {
         const wish = fakeWishes[Math.floor(Math.random() * fakeWishes.length)];
         const div = document.createElement('div');
         div.className = 'wish-item';
-        div.innerHTML = `<span>Anónimo:</span> ${wish}`;
+        div.innerHTML = `<b>Há instantes • Anónimo</b>${wish}`;
         wishList.prepend(div);
-        if(wishList.children.length > 6) wishList.lastChild.remove();
-        shootStar(); // Lança estrela quando entra desejo "novo"
+        if(wishList.children.length > 5) wishList.lastChild.remove();
+        shootStar();
     }
 
-    // 3. Gatilho de Pagamento (Interatividade)
-    document.getElementById('pay-trigger').addEventListener('click', () => {
-        shootStar(true); // Estrela grande e brilhante no clique
+    document.getElementById('pay-button').addEventListener('click', () => {
+        shootStar(true);
     });
 
-    // Loops Automáticos
-    setInterval(addFakeWish, 8000); // Novo desejo a cada 8 seg
     setInterval(() => {
         const current = parseInt(onlineCount.innerText.replace(',',''));
         onlineCount.innerText = (current + Math.floor(Math.random() * 5 - 2)).toLocaleString();
     }, 4000);
 
-    // Inicialização
-    for(let i=0; i<3; i++) addFakeWish();
+    setInterval(addFakeWish, 12000);
+    for(let i=0; i<4; i++) setTimeout(addFakeWish, i * 1500);
 </script>
 
 </body>
