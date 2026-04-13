@@ -5,195 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MakeAWish | Written in the Stars</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@200&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300&display=swap');
 
-        /* 1. DEEP SPACE: ABSOLUTE BLACK BACKGROUND */
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            background: #010103; /* Deep, realistic black */
+            /* FUNDO ESCURO PARA DAR CONTRASTE */
+            background-color: #05050a;
             color: white; font-family: 'Inter', sans-serif; overflow: hidden;
-            -webkit-font-smoothing: antialiased;
         }
 
-        /* 2. REALISTIC TWINKLING STARS BACKGROUND */
-        .stars-bg {
-            position: fixed; inset: 0;
-            background: url('https://www.transparenttextures.com/patterns/dark-dotted-2.png');
-            opacity: 0.8; pointer-events: none; z-index: 1;
-        }
-
-        /* Subtile, darker nebula for depth (image8.png nebula but darker) */
+        /* NEBULOSA COM MENOS OPACIDADE PARA NÃO FICAR ESBRANQUIÇADO */
         .nebula {
             position: fixed; inset: 0;
-            background: url('https://images.unsplash.com/photo-1543722530-d2c3201371e7?q=80&w=2000&auto=format&fit=crop') no-repeat center center;
-            background-size: cover; opacity: 0.15; mix-blend-mode: screen; pointer-events: none; z-index: 0;
+            background: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2000&auto=format&fit=crop') no-repeat center center;
+            background-size: cover; 
+            opacity: 0.5; /* Reduzido de 0.8 para 0.5 para escurecer o site */
+            mix-blend-mode: screen; pointer-events: none;
         }
 
-        /* 3. REALISTIC MOON */
-        .moon {
-            position: absolute; top: 10%; right: 10%; width: 100px; height: 100px;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Full_Moon_Luc_Viatour.jpg/640px-Full_Moon_Luc_Viatour.jpg') no-repeat center center;
-            background-size: contain; filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
-            z-index: 2; opacity: 0.9;
+        .stars-overlay {
+            position: fixed; inset: 0;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.3; z-index: 1; pointer-events: none;
         }
 
-        /* 4. SHOOTING STAR (TRIGGERED ON WISH) */
-        .shooting-star {
-            position: absolute; height: 1px;
-            background: linear-gradient(90deg, white, rgba(255,255,255,0));
-            filter: drop-shadow(0 0 3px white); pointer-events: none; z-index: 5;
+        /* ESTRELAS (DESEJOS) FLUTUANTES */
+        .wish-star {
+            position: absolute; color: rgba(255,255,255,0.9); font-size: 0.9rem;
+            text-shadow: 0 0 15px white; pointer-events: none;
+            animation: wishLife 8s ease-in-out forwards; z-index: 5;
         }
 
-        /* 5. FLOATING INVISIBLE INTERFACE */
-        .main-content {
-            position: relative; z-index: 10; height: 100vh;
-            display: flex; flex-direction: column; justify-content: space-between; align-items: center;
-            padding: 50px 20px; box-sizing: border-box; text-align: center;
+        @keyframes wishLife {
+            0% { opacity: 0; transform: scale(0.5); }
+            20% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: translateY(-30px); }
         }
 
-        header h1 {
-            font-family: 'Cinzel', serif; font-weight: 300; letter-spacing: 12px;
-            text-transform: uppercase; font-size: 2.5em; margin: 0;
-            text-shadow: 0 0 10px rgba(255,255,255,0.4);
-        }
-        header p {
-            color: rgba(255,255,255,0.6); margin-top: 5px; font-weight: 200;
-            letter-spacing: 2px; text-transform: uppercase; font-size: 0.8em;
+        /* INTERFACE LIMPA */
+        .interface {
+            position: relative; z-index: 10; height: 100vh; display: flex;
+            flex-direction: column; justify-content: space-between; align-items: center;
+            padding: 40px 20px; box-sizing: border-box; text-align: center;
         }
 
-        /* LIST OF WISHES: TRANSLUCENT AND FLOATING */
-        #wish-list {
-            position: absolute; top: 25%; left: 5%; width: 35%; max-height: 40vh;
-            overflow: hidden; text-align: left; display: flex; flex-direction: column-reverse; gap: 8px; z-index: 5;
-        }
-        .wish-item {
-            padding: 8px 12px; background: rgba(255,255,255,0.02);
-            border-left: 1px solid rgba(255,255,255,0.05); font-size: 0.8em;
-            color: #ccc; animation: fadeInWish 1s ease forwards, float 6s ease-in-out infinite; opacity: 0;
-        }
-        .wish-item b { color: rgba(255,255,255,0.3); font-weight: 200; margin-right: 5px; }
+        h1 { font-family: 'Cinzel', serif; letter-spacing: 12px; font-size: 2.2rem; margin: 0; text-shadow: 0 0 20px rgba(255,255,255,0.5); }
+        .subtitle { font-size: 0.8rem; letter-spacing: 4px; color: rgba(255,255,255,0.5); text-transform: uppercase; }
 
-        /* 6. INPUT AND PAY: CLEAN & MINIMAL */
-        .input-zone { width: 95%; max-width: 450px; display: flex; flex-direction: column; align-items: center; margin-top: auto; }
+        .input-box { width: 100%; max-width: 400px; margin-bottom: 20px; }
 
         textarea {
-            width: 100%; height: 70px;
-            background: none; border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px; color: white; padding: 15px; resize: none; margin-bottom: 20px;
-            font-size: 1em; box-sizing: border-box; outline: none; transition: border-color 0.3s;
+            width: 100%; background: rgba(0, 0, 0, 0.4); /* Fundo escuro para tirar o esbranquiçado */
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 15px;
+            padding: 20px; color: white; font-family: inherit; resize: none;
+            outline: none; margin-bottom: 15px; backdrop-filter: blur(5px);
+            box-sizing: border-box; font-size: 1rem;
         }
-        textarea::placeholder { color: rgba(255,255,255,0.2); }
-        textarea:focus { border-color: rgba(255,255,255,0.1); }
 
-        /* AQUI: O botão minimalista e realista, não "esbranquiçado" */
-        .btn-pay {
-            background: none; color: white; border: 1px solid rgba(255,255,255,0.1);
-            padding: 16px 45px; border-radius: 50px; font-weight: bold;
-            cursor: pointer; text-decoration: none; text-transform: uppercase;
-            letter-spacing: 3px; font-size: 0.9em; transition: 0.4s;
+        /* BOTÃO SÓLIDO E LIMPO */
+        .pay-btn {
+            background: #ffffff; color: #000; padding: 18px 45px; border-radius: 50px;
+            text-decoration: none; font-weight: bold; font-size: 0.85rem; letter-spacing: 2px;
+            text-transform: uppercase; transition: 0.3s; display: inline-block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .btn-pay:hover { background: rgba(255,255,255,0.05); transform: translateY(-3px); }
 
-        .stats { margin-top: 30px; font-size: 0.7em; color: #444; letter-spacing: 2px; }
-
-        /* Animations */
-        @keyframes fadeInWish { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
-        @keyframes shoot { 0% { transform: translateX(0) translateY(0) rotate(-25deg); width: 0; opacity: 1; } 15% { width: 120px; } 100% { transform: translateX(1300px) translateY(800px) rotate(-25deg); width: 0; opacity: 0; } }
-
+        .pay-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
 
-<div class="stars-bg"></div>
-<div class="nebula"></div>
-<div class="moon"></div>
-<div id="star-layer"></div>
+    <div class="nebula"></div>
+    <div class="stars-overlay"></div>
+    <div id="sky"></div>
 
-<div id="wish-list"></div>
+    <div class="interface">
+        <header>
+            <h1>MAKEAWISH</h1>
+            <div class="subtitle">Written in the Stars</div>
+        </header>
 
-<div class="main-content">
-    <header>
-        <h1>MakeAWish</h1>
-        <p>Your wish, written in the deep cosmos for 2.00€</p>
-    </header>
+        <div class="input-box">
+            <textarea id="wish-input" rows="3" placeholder="Trust your wish to the universe..."></textarea>
+            <a href="https://www.paypal.me/VIPQuickPro/2eur" class="pay-btn" id="btn">Send to the Heavens • 2€</a>
+        </div>
 
-    <div class="input-zone">
-        <textarea id="user-wish" placeholder="Trust your wish to the deep cosmos..."></textarea>
-        <a href="https://www.paypal.me/VIPQuickPro/2eur" class="btn-pay" id="pay-button" target="_blank">Send to the Heavens</a>
+        <div style="font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px;">
+            SECURE WORLDWIDE CONNECTION
+        </div>
     </div>
 
-    <div class="stats">
-        1,842 SOULS CONNECTED
-    </div>
-</div>
+    <script>
+        const sky = document.getElementById('sky');
+        const wishes = ["Love.", "Health.", "Peace.", "Freedom.", "Happiness."];
 
-<script>
-    const starLayer = document.getElementById('star-layer');
-    const wishList = document.getElementById('wish-list');
-    
-    // Lista de desejos simulados para preencher o céu
-    const fakeWishes = [
-        "Paz na terra.", "Cura para quem eu amo.", "Sucesso nos meus estudos.",
-        "Abundância e prosperity.", "Amor sincero.", "Viagem de sonho realizada.",
-        "Força para recomeçar.", "Gratidão pela vida."
-    ];
+        function createWish(text = null) {
+            const star = document.createElement('div');
+            star.className = 'wish-star';
+            star.style.left = Math.random() * 70 + 15 + '%';
+            star.style.top = Math.random() * 40 + 20 + '%';
+            star.innerHTML = `✦ ${text || wishes[Math.floor(Math.random() * wishes.length)]}`;
+            sky.appendChild(star);
+            setTimeout(() => star.remove(), 8000);
+        }
 
-    // GATILHO: Lança estrela cadente real quando o utilizador clica em pagar
-    document.getElementById('pay-button').addEventListener('click', () => {
-        shootWishStar();
-    });
-
-    function shootWishStar() {
-        const star = document.createElement('div');
-        star.className = 'shooting-star';
-        // Começa mais perto do topo e da esquerda para cruzar o ecrã
-        star.style.left = (Math.random() * 20 - 10) + '%';
-        star.style.top = (Math.random() * 30) + '%';
-        
-        // Estrela mais brilhante e branca para o pagamento
-        star.style.height = '3px';
-        star.style.background = 'white';
-        star.style.filter = 'drop-shadow(0 0 10px white)';
-        
-        star.style.animation = `shoot 1.5s ease-out forwards`;
-        starLayer.appendChild(star);
-        setTimeout(() => star.remove(), 2500);
-    }
-
-    function addWishToList() {
-        const wish = fakeWishes[Math.floor(Math.random() * fakeWishes.length)];
-        const div = document.createElement('div');
-        div.className = 'wish-item';
-        div.style.animationDelay = `${Math.random() * 2}s`;
-        div.innerHTML = `<b>Há instantes • Anónimo</b>${wish}`;
-        wishList.prepend(div);
-        
-        if(wishList.children.length > 5) wishList.lastChild.remove();
-        
-        // Lança uma estrela cadente subtil e aleatória para simular um desejo de terceiros
-        shootFakeWishStar();
-    }
-
-    function shootFakeWishStar() {
-        const star = document.createElement('div');
-        star.className = 'shooting-star';
-        star.style.left = (Math.random() * 80) + '%';
-        star.style.top = (Math.random() * 20) + '%';
-        // Mais ténue e rápida
-        star.style.animation = `shoot 2.5s ease-in-out forwards`;
-        starLayer.appendChild(star);
-        setTimeout(() => star.remove(), 3000);
-    }
-
-    // Início rápido com desejos
-    for(let i=0; i<4; i++) {
-        setTimeout(addWishToList, i * 1500);
-    }
-    
-    // Novas estrelas e desejos ao longo do tempo (terceiros)
-    setInterval(addWishToList, 12000);
-</script>
-
+        // Criar desejos iniciais
+        for(let i=0; i<3; i++) setTimeout(createWish, i * 2000);
+        setInterval(createWish, 5000);
+    </script>
 </body>
 </html>
